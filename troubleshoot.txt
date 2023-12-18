@@ -502,10 +502,33 @@ New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
 //mount host directory to docker vm (-v host folder/docker vm folder)
 -v /home/user:/home/user
 
+//port mapping
+-p 7860:7860
+
+brctl show
+docker network create -d bridge pytorch
+
+//get vm ip address
+docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 49b2369972ed
+
+//stop and copy imagem backup vm to image
+docker stop test01
+docker commit test01 test02
+docker run -p 8080:8080 -td test02
+
 docker run -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -v /home/user:/home/user --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G rocm/pytorch:latest
+
+docker run -it -p 7860:7860 --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -v /home/user:/home/user --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G rocm/pytorch2:latest
+docker run -it --network=pytorch --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -v /home/user:/home/user --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G rocm/pytorch2:latest
+
+docker exec -it ad347a94784e sh
 
 ls -ltr /home/user
 
 //check GPU support
 import torch
 torch.cuda.is_available()
+
+----------ip table allow port----------
+iptables -A INPUT -p tcp --dport 4000 -j ACCEPT
+
