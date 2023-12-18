@@ -1,0 +1,11 @@
+begin
+  prog = myprogram
+  button = KEY_1
+  config = one
+end
+ 
+begin
+  prog = myprogram
+  button = KEY_2
+  config = two
+end

@@ -1,0 +1,49 @@
+Plan{
+	HW{
+		Case{
+			Select simple case - Done
+			Make some modification for motors, elektronic carts mount - Done
+			Mount motors - Done
+			Mount botton 4x distance sensors - Done
+			Mount front disctance sensor - Done
+			Mount Orange PI  - Done
+			Mount oled screen - Done
+			Mount Usb camera - Done
+			Mount Motor controller and arduino nano with board - Done
+			Mount Battery, protection board, amper and volt meter - Done
+			Make speakers and microphone hw and mount on robot body - Done
+			Mount RGB front side leds - Done
+			Make spesific head with micropone and screen - Not started
+			Make 4 motors with spesific tier - Not started
+		}
+		Elektronic companents, scematic, cabling etc ..{
+			Make specific card for arduino nano - Done
+			I2C connection between Orange PI and arduino nano - Done
+			Connection between orangepi and oled screen - Done
+			Make 2 arduino nano board (one for front, other for back) - Not started
+		}
+	}
+	Software{
+		Microcontroller{
+			Arduino motor control codes - Done
+			Arduino loop per second for veritification - Done
+			Arduino distance sensors and auto protections - Done
+			Arduino amper meter - Done
+			Arduino led controll addition - Done
+		}
+		Linux,scripting,AI{
+			Screens preparation  - Done
+			Ram based disk for information sharing - Done
+			Startup scripts - Done
+			Led screen codes. i2C interface - Done
+			Touch sensor codes,gpio pins control - Done
+			Arduino I2C connection codes and motor commands - Done
+			IR command codes - Done
+			Speech commands tests - Ongoing
+			CV cam object detection and track - Done
+			CV cam Face detection, track and save for future train - Done
+			AI tenserflow face detection train and upload model to robot - Ongoing
+			AI pytorch sound detection, commands - Not started
+		}
+	}
+}

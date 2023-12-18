@@ -1,0 +1,501 @@
+aplay -l
+lspci -knn|grep -iA2 audio
+//speaker test
+speaker-test -c2
+
+sudo alsamixer
+sudo alsactl store 0
+
+vi /etc/asound.conf
+---default, change cart number for default output for usb card
+pcm.!default {
+    type hw
+    card 0
+}
+
+ctl.!default {
+    type hw
+    card 0
+}
+
+---mirror
+pcm.analog-hw {
+    type hw
+    card 0
+}
+
+
+pcm.hdmi-hw {
+    type hw
+    card 1
+}
+---------------------
+pcm.!default {
+  type asym
+  capture.pcm "mic"
+  playback.pcm "speaker"
+}
+pcm.mic {
+  type plug
+  slave {
+    pcm "hw:2,0"
+  }
+}
+pcm.speaker {
+  type plug
+  slave {
+    pcm "hw:3,0"
+  }
+}
+-------------Mic and speaker test-----------
+aplay -l
+arecord -l
+arecord -f S16_LE -d 10 -r 16000 --device="hw:1,0" /tmp/test-mic.wav
+aplay /tmp/test-mic.wav
+------------------------
+root@orangepilite:~/seon-robot/OrangePi-OLED/examples# python2 arduino_test.py 8.120.000.15.05.255.0.8  //rigt
+root@orangepilite:~/seon-robot/OrangePi-OLED/examples# python2 arduino_test.py 8.090.000.05.15.255.0.8  //left
+
+root@orangepilite:~/seon-robot/OrangePi-OLED/examples# python2 motor_command.py 8.100.000.22.00.255.0.8
+root@orangepilite:~/seon-robot/OrangePi-OLED/examples# python2 motor_command.py 8.100.000.00.22.255.0.8
+
+python2 seon-robot/OrangePi-OLED/examples/arduino_test.py 8.120.000.15.05.255.0.8
+
+irrecord --disable-namespace -H default -d /dev/lirc0 /etc/lirc/lircd.conf
+
+------------------------------
+Use CSRT when you need higher object tracking accuracy and can tolerate slower FPS throughput
+Use KCF when you need faster FPS throughput but can handle slightly lower object tracking accuracy
+Use MOSSE when you need pure speed
+
+
+tahmaz@HP:~/Desktop/seon-robot$ git add .
+tahmaz@HP:~/Desktop/seon-robot$ git commit -m "commit"
+tahmaz@HP:~/Desktop/seon-robot$ git push https://github.com/tahmaz/seon-robot.git
+Username: tahmaz
+Password: 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
+
+--------------------------------if pyaudio install fail install this then pyaudio---------------------
+sudo apt install libasound-dev portaudio19-dev libportaudio2 libportaudiocpp0
+sudo apt install ffmpeg libav-tools
+sudo apt install espeak
+
+-----------------
+lspci -knn|grep -iA2 audio
+vi /etc/modprobe.d/default.conf
+//add
+options snd_hda_intel index=1
+speaker-test -c2
+--------------------
+
+------------------mic list--------------
+import speech_recognition as sr
+for index, name in enumerate(sr.Microphone.list_microphone_names()):
+    print("Microphone with name \"{1}\" found for `Microphone(device_index={0})`".format(index, name))
+	
+Microphone with name "H3 Audio Codec: CDC PCM Codec-0 (hw:0,0)" found for `Microphone(device_index=0)`
+Microphone with name "sun9i-hdmi: SUN9I-HDMI PCM i2s-hifi-0 (hw:1,0)" found for `Microphone(device_index=1)`
+Microphone with name "TRAX TWC 1080P: USB Audio (hw:2,0)" found for `Microphone(device_index=2)`
+Microphone with name "sysdefault" found for `Microphone(device_index=3)`
+Microphone with name "analog-hw" found for `Microphone(device_index=4)`
+Microphone with name "hdmi-hw" found for `Microphone(device_index=5)`
+Microphone with name "default" found for `Microphone(device_index=6)`
+Microphone with name "dmix" found for `Microphone(device_index=7)`
+
+-------------------------------------------
+
+//comment below for remove warnings
+root@orangepilite:~/seon-robot/speech# vi  /usr/share/alsa/alsa.conf
+pcm.default cards.pcm.default
+pcm.sysdefault cards.pcm.default
+#pcm.front cards.pcm.front
+#pcm.rear cards.pcm.rear
+#pcm.center_lfe cards.pcm.center_lfe
+#pcm.side cards.pcm.side
+#pcm.surround21 cards.pcm.surround21
+#pcm.surround40 cards.pcm.surround40
+#pcm.surround41 cards.pcm.surround41
+#pcm.surround50 cards.pcm.surround50
+#pcm.surround51 cards.pcm.surround51
+#pcm.surround71 cards.pcm.surround71
+#pcm.iec958 cards.pcm.iec958
+#pcm.spdif iec958
+#pcm.hdmi cards.pcm.hdmi
+pcm.dmix cards.pcm.dmix
+pcm.dsnoop cards.pcm.dsnoop
+#pcm.modem cards.pcm.modem
+#pcm.phoneline cards.pcm.phoneline
+
+----------------ram disk create----------------
+//disl speed test
+dd if=/dev/zero of=/tmp/test1.img bs=30M count=1000 oflag=dsync
+
+mount -t tmpfs -o size=32m tmpfs tmpdisk /mnt/ramdisk
+
+vi /etc/fstab
+tmpfs       /mnt/ramdisk tmpfs   nodev,nosuid,noexec,nodiratime,size=32M   0 0
+
+----------------charge state--------------
+void loop(){
+  value = analogRead(A0);
+  voltage = value * 5.0/1023;
+  perc = map(voltage, 3.6, 4.2, 0, 100);
+  Serial.print("Voltage= ");
+  Serial.println(voltage);
+  Serial.print("Battery level= ");
+  Serial.print(perc);
+  Serial.println(" %");
+  delay(500);
+}
+
+ void printVolts()
+{
+  int sensorValue = analogRead(A0); //read the A0 pin value
+  float voltage = sensorValue * (5.00 / 1023.00) * 2; //convert the value to a true voltage.
+  lcd.setCursor(0,0);
+  lcd.print("voltage = ");
+  lcd.print(voltage); //print the voltage to LCD
+  lcd.print(" V");
+  if (voltage < 6.50) //set the voltage considered low battery here
+  {
+    digitalWrite(led_pin, HIGH);
+  }
+}
+------------------Kill screen--------------------------
+
+screen -X -S cam quit
+
+
+---------python call command------------
+import subprocess,os
+
+if(textp == "okay"):
+    os.system(f"/root/seon-robot/commands/track_ball_stop.sh")
+elif(textp == "up"):
+    subprocess.run(['/root/seon-robot/commands/track_ball_start.sh'],shell=True)
+	
+--------------python file does not exsist-------------------
+DATASET_PATH = 'data/mini_speech_commands'
+
+data_dir = pathlib.Path(DATASET_PATH)
+if not data_dir.exists():
+  tf.keras.utils.get_file(
+      'mini_speech_commands.zip',
+      origin="http://storage.googleapis.com/download.tensorflow.org/data/mini_speech_commands.zip",
+      extract=True,
+      cache_dir='.', cache_subdir='data')
+	  
+----------------------------------------------
+https://github.com/alexa-pi/AlexaPi/wiki/Installation
+
+sudo git clone https://github.com/alexa-pi/AlexaPi.git
+sudo ./AlexaPi/src/scripts/setup.sh
+
+	  # Amazon Alexa settings
+alexa:
+  Client_ID: "amzn1.application-oa2-client.1c45a4ffa38344faa81f7a410b533564"
+  Client_Secret: "a2cc33f8c2be6f2d321c2a6d1af8b2bb2e3e2d2e504541ab6969cbcc77d4346d"
+  Device_Type_ID: "Prangepi_alexa"
+  Security_Profile_Description: "Orangepi profile"
+  Security_Profile_ID: "amzn1.application.91dade14efac483799b5068c180c301c"
+  refresh_token: "Atzr|IwEBIL_i8K1AyfedR1IKL0OODdRqkpQpqCp5AcV1EYGq8uAdRqwcZlUoYiYdtT6KXXRfppA1snWQGXtddwh_vKM02qsvRdFJDo_wm5OIyb8hwrgTUIVm6YkGgijlRboRKC2vN9YCFISJdJt-_rvF6cALofWmw-2Xl7oa3DkgYZxC7YqVscaYuC9ewlFVrDzmj41lRZl91Ot6Mh7PIPk6jyizZSuPZsCmNzp3hqu5rnuN2E4XqENJCFX88mQ2z9n46w0q8Ymm7xAZ95CPT9mI63igztas0Y6OTk40tYEpLHzcr606qvjI47l2KfgRk4ZTP3aAB1_Se2FrvZ8DA-fj6sooXjXtOBNLtvDkAMfmQ52nopviXg"
+
+---main folder---
+/root/alexa/AlexaPi/src
+
+
+start-stop-daemon --start --background --quiet --chuid root:root --chdir /run/AlexaPi --pidfile /run/AlexaPi/AlexaPi.pid --make-pidfile --exec /usr/bin/python3 /root/alexa/AlexaPi/src/main.py -- -d --daemon
+start-stop-daemon --start --background --quiet --pidfile /run/AlexaPi/monitor.pid --make-pidfile --exec /root/alexa/AlexaPi/src/scripts/monitorAlexa.sh
+
+------------------------initd_alexa.sh -------------------
+#!/bin/bash
+
+# Inspired by https://gist.github.com/alobato/1968852
+
+### BEGIN INIT INFO
+# Provides:          AlexaPi
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: AlexaPi Service
+# Description:       Start / Stop AlexaPi Service
+### END INIT INFO
+
+set -e
+
+NAME="AlexaPi"
+PIDFILE="/run/$NAME/$NAME.pid"
+DAEMON="/usr/bin/python3 /root/alexa/AlexaPi/src/main.py"
+DAEMON_OPTS="--daemon"
+RUN_USER="root"
+RUN_GROUP="root"
+
+MONITOR_ENABLEFILE="/etc/opt/AlexaPi/monitor_enable"
+MONITOR_PIDFILE="/run/${NAME}/monitor.pid"
+MONITOR_DAEMON="/root/alexa/AlexaPi/src/scripts/monitorAlexa.sh"
+
+function alexa_run {
+    mkdir -p /run/$NAME
+    chown $RUN_USER:$RUN_GROUP /run/$NAME
+
+    start-stop-daemon --start --background --quiet --chuid $RUN_USER:$RUN_GROUP --chdir /run/$NAME --pidfile $PIDFILE --make-pidfile --exec "$DAEMON" -- $DAEMON_OPTS
+}
+
+exec > /var/log/$NAME.log 2>&1
+
+case "$1" in
+
+    start)
+        echo -n "Starting $NAME ... "
+        alexa_run
+
+        if [ -f $MONITOR_ENABLEFILE ]; then
+            start-stop-daemon --start --background --quiet --pidfile $MONITOR_PIDFILE --make-pidfile --exec $MONITOR_DAEMON
+        fi
+
+        echo "done."
+    ;;
+
+    silent)
+        echo -n "Starting $NAME in silent mode ... "
+        DAEMON_OPTS="$DAEMON_OPTS -s"
+        alexa_run
+        echo "done."
+    ;;
+
+    stop)
+        echo -n "Stopping $NAME ... "
+        start-stop-daemon --stop --quiet --oknodo --pidfile $MONITOR_PIDFILE --remove-pidfile
+	    start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE --remove-pidfile
+        echo "done."
+	;;
+
+    restart|force-reload)
+        echo -n "Restarting $NAME ... "
+        start-stop-daemon --stop --quiet  --oknodo --retry 30 --pidfile $PIDFILE --remove-pidfile
+        alexa_run
+        echo "done."
+    ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+
+esac
+
+exit 0
+-------------------------
+2021-11-17 21:10:53 INFO: Triggered: snowboy
+2021-11-17 21:10:53 DEBUG: Stopping audio play
+2021-11-17 21:10:53 DEBUG: Playing audio: /opt/AlexaPi/src/resources/alexayes.mp3
+2021-11-17 21:10:53 DEBUG: Player State: State.Opening
+2021-11-17 21:10:53 DEBUG: Player State: State.Playing
+2021-11-17 21:10:53 DEBUG: Started play.
+2021-11-17 21:10:54 DEBUG: Player State: State.Ended
+2021-11-17 21:10:54 DEBUG: Finished play.
+2021-11-17 21:10:54 DEBUG: Recording: Setting up
+2021-11-17 21:10:54 DEBUG: Recording: Start
+2021-11-17 21:10:54 DEBUG: Starting new HTTPS connection (1): access-alexa-na.amazon.com:443
+2021-11-17 21:10:55 DEBUG: Start sending speech to Alexa Voice Service
+2021-11-17 21:10:56 DEBUG: Recording: End
+2021-11-17 21:10:56 DEBUG: Finished sending speech to Alexa Voice Service
+2021-11-17 21:11:00 DEBUG: Processing Request Response...
+2021-11-17 21:11:00 INFO: (process_response Error) Status Code: 500
+
+
+----------------linux change sound card names----------------
+/etc/udev/rules.d/
+vi 85-my-usb-audio.rules
+
+SUBSYSTEM!="sound", GOTO="my_usb_audio_end"
+ACTION!="add", GOTO="my_usb_audio_end"
+
+DEVPATH=="/devices/pci0000:00/0000:00:12.2/usb1/1-4/1-4.3/1-4.3:1.0/sound/card?", ATTR{id}="MyDev_A"
+DEVPATH=="/devices/pci0000:00/0000:00:12.2/usb1/1-4/1-4.2/1-4.2:1.0/sound/card?", ATTR{id}="MyDev_B"
+
+LABEL="my_usb_audio_end"
+
+oot@orangepilite:~/seon-robot/orangepi_PC_gpio_pyH3/examples# usb-devices 
+
+T:  Bus=01 Lev=00 Prnt=00 Port=00 Cnt=00 Dev#=  1 Spd=480 MxCh= 1
+D:  Ver= 2.00 Cls=09(hub  ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1d6b ProdID=0002 Rev=05.15
+S:  Manufacturer=Linux 5.15.74-sunxi ehci_hcd
+S:  Product=EHCI Host Controller
+S:  SerialNumber=1c1b000.usb
+C:  #Ifs= 1 Cfg#= 1 Atr=e0 MxPwr=0mA
+I:  If#= 0 Alt= 0 #EPs= 1 Cls=09(hub  ) Sub=00 Prot=00 Driver=hub
+E:  Ad=81(I) Atr=03(Int.) MxPS=   4 Ivl=256ms
+
+T:  Bus=02 Lev=00 Prnt=00 Port=00 Cnt=00 Dev#=  1 Spd=480 MxCh= 1
+D:  Ver= 2.00 Cls=09(hub  ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1d6b ProdID=0002 Rev=05.15
+S:  Manufacturer=Linux 5.15.74-sunxi ehci_hcd
+S:  Product=EHCI Host Controller
+S:  SerialNumber=1c1c000.usb
+C:  #Ifs= 1 Cfg#= 1 Atr=e0 MxPwr=0mA
+I:  If#= 0 Alt= 0 #EPs= 1 Cls=09(hub  ) Sub=00 Prot=00 Driver=hub
+E:  Ad=81(I) Atr=03(Int.) MxPS=   4 Ivl=256ms
+
+T:  Bus=02 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=23c5 ProdID=1478 Rev=04.09
+S:  Manufacturer=Xiongmai
+S:  Product=TRAX TWC 1080P
+S:  SerialNumber=200251010
+C:  #Ifs= 4 Cfg#= 1 Atr=c0 MxPwr=2mA
+I:  If#= 0 Alt= 0 #EPs= 1 Cls=0e(video) Sub=01 Prot=00 Driver=uvcvideo
+E:  Ad=82(I) Atr=03(Int.) MxPS=  16 Ivl=16ms
+I:  If#= 1 Alt= 0 #EPs= 0 Cls=0e(video) Sub=02 Prot=00 Driver=uvcvideo
+I:  If#= 2 Alt= 0 #EPs= 0 Cls=01(audio) Sub=01 Prot=00 Driver=snd-usb-audio
+I:  If#= 3 Alt= 0 #EPs= 0 Cls=01(audio) Sub=02 Prot=00 Driver=snd-usb-audio
+
+T:  Bus=03 Lev=00 Prnt=00 Port=00 Cnt=00 Dev#=  1 Spd=12  MxCh= 1
+D:  Ver= 1.10 Cls=09(hub  ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1d6b ProdID=0001 Rev=05.15
+S:  Manufacturer=Linux 5.15.74-sunxi ohci_hcd
+S:  Product=Generic Platform OHCI controller
+S:  SerialNumber=1c1b400.usb
+C:  #Ifs= 1 Cfg#= 1 Atr=e0 MxPwr=0mA
+I:  If#= 0 Alt= 0 #EPs= 1 Cls=09(hub  ) Sub=00 Prot=00 Driver=hub
+E:  Ad=81(I) Atr=03(Int.) MxPS=   2 Ivl=255ms
+
+T:  Bus=03 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=12  MxCh= 0
+D:  Ver= 1.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS= 8 #Cfgs=  1
+P:  Vendor=08bb ProdID=2902 Rev=01.00
+S:  Manufacturer=C-Media Electronics Inc.      
+S:  Product=USB PnP Sound Device
+C:  #Ifs= 4 Cfg#= 1 Atr=80 MxPwr=100mA
+I:  If#= 0 Alt= 0 #EPs= 0 Cls=01(audio) Sub=01 Prot=00 Driver=snd-usb-audio
+I:  If#= 1 Alt= 0 #EPs= 0 Cls=01(audio) Sub=02 Prot=00 Driver=snd-usb-audio
+I:  If#= 2 Alt= 0 #EPs= 0 Cls=01(audio) Sub=02 Prot=00 Driver=snd-usb-audio
+I:  If#= 3 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
+E:  Ad=87(I) Atr=03(Int.) MxPS=   4 Ivl=2ms
+
+T:  Bus=04 Lev=00 Prnt=00 Port=00 Cnt=00 Dev#=  1 Spd=12  MxCh= 1
+D:  Ver= 1.10 Cls=09(hub  ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1d6b ProdID=0001 Rev=05.15
+S:  Manufacturer=Linux 5.15.74-sunxi ohci_hcd
+S:  Product=Generic Platform OHCI controller
+S:  SerialNumber=1c1c400.usb
+C:  #Ifs= 1 Cfg#= 1 Atr=e0 MxPwr=0mA
+I:  If#= 0 Alt= 0 #EPs= 1 Cls=09(hub  ) Sub=00 Prot=00 Driver=hub
+E:  Ad=81(I) Atr=03(Int.) MxPS=   2 Ivl=255ms
+
+root@orangepilite:~/seon-robot/orangepi_PC_gpio_pyH3/examples# arecord -l
+**** List of CAPTURE Hardware Devices ****
+card 0: Codec [H3 Audio Codec], device 0: CDC PCM Codec-0 [CDC PCM Codec-0]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+card 1: T1080P [TRAX TWC 1080P], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+card 2: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+  
+root@orangepilite:~/seon-robot/orangepi_PC_gpio_pyH3/examples# aplay -l
+**** List of PLAYBACK Hardware Devices ****
+card 0: Codec [H3 Audio Codec], device 0: CDC PCM Codec-0 [CDC PCM Codec-0]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+card 2: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+card 3: sun9ihdmi [sun9i-hdmi], device 0: SUN9I-HDMI PCM i2s-hifi-0 [SUN9I-HDMI PCM i2s-hifi-0]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+  
+------------------------Current sensor values----------------------
+ma		sensor
+0		405
+100		415
+330		560
+490		580
+670		592
+1000	615
+1500	650
+2000	684
+
+------------------install tensorflow----------------
+wget https://www.piwheels.org/simple/tensorflow/tensorflow-1.14.0-cp37-none-linux_armv7l.whl
+wget https://storage.googleapis.com/tensorflow/raspberrypi/tensorflow-2.3.0-cp35-none-linux_armv6l.whl
+pip3 install tensorflow-2.3.0-cp35-none-linux_armv7l.whl
+
+-------------------python lps, tps calculation---------------------
+import time
+
+lps = 0
+lps_last_time = 0
+lps_print_sec = 10 #sec
+
+while True:
+    current_millis = round(time.time() * 1000)
+
+    if ((current_millis - lps_last_time) > (lps_print_sec * 1000)):
+        lps_last_time = round(time.time() * 1000)
+        print("LPS: {0}".format(lps))
+        lps = 0
+
+    lps += 1
+-------------------------------------virsh install-----------------------------------------
+apt install virtinst
+wget https://github.com/home-assistant/operating-system/releases/download/9.4/haos_ova-9.4.qcow2.xz
+sudo apt install qemu qemu-kvm libvirt-clients libvirt-daemon-system virtinst bridge-utils
+
+sudo systemctl enable libvirtd
+sudo systemctl start libvirtd
+
+//example install VM
+virt-install --name hass --description "Home Assistant OS" --os-variant=generic --ram=2048 --vcpus=2 --disk haos_ova-9.4.qcow2.xz,bus=sata --graphics none --import
+
+virsh list
+-----------------------------------Home assistant install to ubuntu---------------
+sudo apt-get install ca-certificates curl gnupg lsb-release
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+sudo systemctl enable docker
+sudo usermod -aG docker <your user name>
+newgrp docker
+sudo docker run hello-world
+sudo docker run -d --name homeassistant --privileged --restart=unless-stopped -e TZ=UTC -v /homeassistant/config:/config --network=host ghcr.io/home-assistant/home-assistant:stable
+
+//connection http://192.168.64.8:8123
+
+------------------------------------Add hassio supervisor to homeassistant------------------------------------------------------------
+docker run -d --name=hassio_supervisor \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /var/run/dbus:/var/run/dbus \
+-v /volume1/docker/homeassistant:/data \
+-e SUPERVISOR_SHARE=/volume1/docker/homeassistant \
+-e SUPERVISOR_NAME=hassio_supervisor \
+-e HOMEASSISTANT_REPOSITORY=homeassistant/qemux86-64-homeassistant \
+--security-opt seccomp=unconfined \
+--privileged \
+--restart always \
+homeassistant/amd64-hassio-supervisor:2022.12.1
+
+-------------------------------Some of the most popular face recognition algorithms in OpenCV include:
+
+    - Eigenface: One of the most basic and widely used face recognition algorithms, it uses principal component analysis (PCA) to create an "eigenface" representation of the face.
+    - Fisherface: An improvement over the Eigenface algorithm that uses linear discriminant analysis (LDA) to create a more robust representation of the face.
+    - Local Binary Patterns Histograms (LBPH): This algorithm uses local binary patterns to create a histogram of the face, which is then compared to a database of known faces.
+    - Haar Cascade Classifier: This algorithm uses a cascaded set of simple classifiers based on Haar features to detect faces in an image.
+    - Deep Learning based methods such as OpenCV's dnn module that uses pre-trained deep neural networks like ResNet, MobileNet and VGG.
+    - Multi-task Cascaded Convolutional Networks (MTCNN) is another popular algorithm which is used for face detection and alignment.
+	
+-----------------------------------------------------------------
+openai key
+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
+
+-----------------------------------------------------------------
+//enable logn path
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
+>> -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+-----------------------------------------------------------------
+
