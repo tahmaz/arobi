@@ -20,7 +20,8 @@ Plan{
 			Make specific card for arduino nano - Done
 			I2C connection between Orange PI and arduino nano - Done
 			Connection between orangepi and oled screen - Done
-			Make 2 arduino nano board (one for front, other for back) - Not started
+			Remove main distance sensor and add two microphone for voice direction detection. - Not started 
+			Make 2 arduino nano board (one for front, other for back control) - Not started
 		}
 	}
 	Software{

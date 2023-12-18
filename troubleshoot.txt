@@ -497,5 +497,15 @@ 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
 //enable logn path
 New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
 >> -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
------------------------------------------------------------------
 
+------------Load docker pytorch image and run it-------------------
+//mount host directory to docker vm (-v host folder/docker vm folder)
+-v /home/user:/home/user
+
+docker run -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -v /home/user:/home/user --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G rocm/pytorch:latest
+
+ls -ltr /home/user
+
+//check GPU support
+import torch
+torch.cuda.is_available()
