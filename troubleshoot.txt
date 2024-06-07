@@ -1,3 +1,24 @@
+//bus list
+i2cdetect -l
+
+//detect devices in bus
+i2cdetect -y 0
+i2cdetect -y 1
+i2cdetect -y 2
+
+//08 arduino, 3c oled
+root@orangepilite:~/seon-robot# i2cdetect -y 0
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:                         08 -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- -- -- -- -- -- -- 3c -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
+
+------------
 aplay -l
 lspci -knn|grep -iA2 audio
 //speaker test
@@ -48,9 +69,17 @@ pcm.speaker {
   }
 }
 -------------Mic and speaker test-----------
+//speaker list
 aplay -l
+
+//adjust soud volumes
+alsamixer
+
+//mic list
 arecord -l
-arecord -f S16_LE -d 10 -r 16000 --device="hw:1,0" /tmp/test-mic.wav
+
+//test mic and play
+arecord -f S16_LE -d 10 -r 16000 --device="hw:3,0" /tmp/test-mic.wav
 aplay /tmp/test-mic.wav
 ------------------------
 root@orangepilite:~/seon-robot/OrangePi-OLED/examples# python2 arduino_test.py 8.120.000.15.05.255.0.8  //rigt
@@ -92,7 +121,7 @@ speaker-test -c2
 import speech_recognition as sr
 for index, name in enumerate(sr.Microphone.list_microphone_names()):
     print("Microphone with name \"{1}\" found for `Microphone(device_index={0})`".format(index, name))
-	
+
 Microphone with name "H3 Audio Codec: CDC PCM Codec-0 (hw:0,0)" found for `Microphone(device_index=0)`
 Microphone with name "sun9i-hdmi: SUN9I-HDMI PCM i2s-hifi-0 (hw:1,0)" found for `Microphone(device_index=1)`
 Microphone with name "TRAX TWC 1080P: USB Audio (hw:2,0)" found for `Microphone(device_index=2)`
@@ -173,7 +202,7 @@ if(textp == "okay"):
     os.system(f"/root/seon-robot/commands/track_ball_stop.sh")
 elif(textp == "up"):
     subprocess.run(['/root/seon-robot/commands/track_ball_start.sh'],shell=True)
-	
+
 --------------python file does not exsist-------------------
 DATASET_PATH = 'data/mini_speech_commands'
 
@@ -184,7 +213,7 @@ if not data_dir.exists():
       origin="http://storage.googleapis.com/download.tensorflow.org/data/mini_speech_commands.zip",
       extract=True,
       cache_dir='.', cache_subdir='data')
-	  
+
 ----------------------------------------------
 https://github.com/alexa-pi/AlexaPi/wiki/Installation
 
@@ -315,7 +344,7 @@ DEVPATH=="/devices/pci0000:00/0000:00:12.2/usb1/1-4/1-4.2/1-4.2:1.0/sound/card?"
 
 LABEL="my_usb_audio_end"
 
-oot@orangepilite:~/seon-robot/orangepi_PC_gpio_pyH3/examples# usb-devices 
+oot@orangepilite:~/seon-robot/orangepi_PC_gpio_pyH3/examples# usb-devices
 
 T:  Bus=01 Lev=00 Prnt=00 Port=00 Cnt=00 Dev#=  1 Spd=480 MxCh= 1
 D:  Ver= 2.00 Cls=09(hub  ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
@@ -363,7 +392,7 @@ E:  Ad=81(I) Atr=03(Int.) MxPS=   2 Ivl=255ms
 T:  Bus=03 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=12  MxCh= 0
 D:  Ver= 1.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS= 8 #Cfgs=  1
 P:  Vendor=08bb ProdID=2902 Rev=01.00
-S:  Manufacturer=C-Media Electronics Inc.      
+S:  Manufacturer=C-Media Electronics Inc.
 S:  Product=USB PnP Sound Device
 C:  #Ifs= 4 Cfg#= 1 Atr=80 MxPwr=100mA
 I:  If#= 0 Alt= 0 #EPs= 0 Cls=01(audio) Sub=01 Prot=00 Driver=snd-usb-audio
@@ -393,7 +422,7 @@ card 1: T1080P [TRAX TWC 1080P], device 0: USB Audio [USB Audio]
 card 2: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
   Subdevices: 1/1
   Subdevice #0: subdevice #0
-  
+
 root@orangepilite:~/seon-robot/orangepi_PC_gpio_pyH3/examples# aplay -l
 **** List of PLAYBACK Hardware Devices ****
 card 0: Codec [H3 Audio Codec], device 0: CDC PCM Codec-0 [CDC PCM Codec-0]
@@ -405,7 +434,7 @@ card 2: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
 card 3: sun9ihdmi [sun9i-hdmi], device 0: SUN9I-HDMI PCM i2s-hifi-0 [SUN9I-HDMI PCM i2s-hifi-0]
   Subdevices: 1/1
   Subdevice #0: subdevice #0
-  
+
 ------------------------Current sensor values----------------------
 ma		sensor
 0		405
@@ -488,7 +517,7 @@ homeassistant/amd64-hassio-supervisor:2022.12.1
     - Haar Cascade Classifier: This algorithm uses a cascaded set of simple classifiers based on Haar features to detect faces in an image.
     - Deep Learning based methods such as OpenCV's dnn module that uses pre-trained deep neural networks like ResNet, MobileNet and VGG.
     - Multi-task Cascaded Convolutional Networks (MTCNN) is another popular algorithm which is used for face detection and alignment.
-	
+
 -----------------------------------------------------------------
 openai key
 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
@@ -518,7 +547,7 @@ docker run -p 8080:8080 -td test02
 
 docker run -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -v /home/user:/home/user --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G rocm/pytorch:latest
 
-docker run -it -p 7860:7860 --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -v /home/user:/home/user --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G rocm/pytorch2:latest
+docker run -it -p 192.168.1.130:7860:7860 --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -v /home/user:/home/user --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G rocm/pytorch2:latest
 docker run -it --network=pytorch --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -v /home/user:/home/user --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G rocm/pytorch2:latest
 
 docker exec -it ad347a94784e sh
@@ -530,5 +559,1063 @@ import torch
 torch.cuda.is_available()
 
 ----------ip table allow port----------
-iptables -A INPUT -p tcp --dport 4000 -j ACCEPT
+iptables -A INPUT -p tcp --dport 7860 -j ACCEPT
 
+//show
+iptables -nL -t nat --line-numbers |grep 7860
+//delete
+iptables -t nat -D DOCKER-INGRESS 7
+//add
+iptables -t nat -I DOCKER-INGRESS -p tcp -i eth0 --dport 7860 -j DNAT --to-destination 172.17.0.3:7860
+
+---------------python output,input tests------------------
+import pyttsx3
+import alsaaudio
+
+print("Available output devices:")
+for card in alsaaudio.cards():
+    print(f"Card: {card}")
+    #for device in alsaaudio.pcms(0):
+    #    print(f"  {device}")
+
+for mixer in alsaaudio.mixers(cardindex=-1, device='default'):
+    print(f"Mixer: {mixer}")
+
+for pcm in alsaaudio.pcms():
+    print(f"PCM: {pcm}")
+
+print(f"  {alsaaudio.PCM(0).info()}")
+print(f"  {alsaaudio.PCM(1).info()}")
+
+card_info = {}
+for device_number, card_name in enumerate(alsaaudio.cards()):
+    card_info[card_name] = "hw:%s,0" % device_number
+
+print(card_info)
+
+for i in alsaaudio.card_indexes():
+    (name, longname) = alsaaudio.card_name(i)
+    print("  %d: %s (%s)" % (i, name, longname))
+    print(alsaaudio.mixers(cardindex=i))
+
+
+#alsaaudio.PCM(type=PCM_PLAYBACK, mode=PCM_NORMAL, rate=44100, channels=2, format=PCM_FORMAT_S16_LE, periodsize=32, periods=4, device='default', cardindex=-1)
+
+#Speaker 5: HDA NVidia: HDMI 2 (hw:1,8)
+#Speaker 6: HDA NVidia: HDMI 3 (hw:1,9)
+#Speaker 7: Y11: USB Audio (hw:2,0)
+
+#mixer = alsaaudio.Mixer()
+mixer = alsaaudio.Mixer(control='PCM', cardindex=2, device="Y11")
+#mixer = alsaaudio.Mixer()
+mixer.setvolume(100)  # Set volume to 70%
+mixer.setmute(0)    # Unmute the speaker
+
+import sounddevice as sd
+import soundfile as sf
+print(sd.query_devices())
+
+sd.default.device = 'Y11'
+print(sd.query_devices())
+
+
+#engine = pyttsx3.init()
+#engine.say("Hello, World!")
+#engine.runAndWait()
+
+engine = pyttsx3.Engine()
+text = "The quick brown fox jumped over the lazy dog."
+
+# Save speech as audio file
+engine.save_to_file(text, "speech.wav")
+engine.runAndWait()
+
+import argparse
+
+def int_or_str(text):
+    """Helper function for argument parsing."""
+    try:
+        return int(text)
+    except ValueError:
+        return text
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('speech.wav', help='audio file to be played back')
+parser.add_argument('-d', '--device', type=int_or_str,
+                    help='Y11')
+args = parser.parse_args()
+
+try:
+    data, fs = sf.read(args.filename, dtype='float32')
+    sd.play(data, fs, device=args.device)
+    status = sd.wait()
+    if status:
+        parser.exit('Error during playback: ' + str(status))
+except KeyboardInterrupt:
+    parser.exit('\nInterrupted by user')
+except Exception as e:
+    parser.exit(type(e).__name__ + ': ' + str(e))
+
+#Input & Output Settings
+periodsize = 1024
+audioformat = alsaaudio.PCM_FORMAT_FLOAT_LE
+channels = 16
+framerate=8000
+
+#Input Device
+inp = alsaaudio.PCM(alsaaudio.PCM_CAPTURE,alsaaudio.PCM_NONBLOCK,device='hw:2,0')
+inp.setchannels(channels)
+inp.setrate(framerate)
+inp.setformat(audioformat)
+inp.setperiodsize(periodsize)
+
+#Output Device
+out = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK,device='hw:2,0')
+out.setchannels(channels)
+out.setrate(framerate)
+out.setformat(audioformat)
+out.setperiodsize(periodsize)
+
+engine = pyttsx3.init()
+engine.say("Hello, World!")
+engine.runAndWait()
+---------------------Install rust----------------------
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+---------------------Install google-cloud-speech, before install rust----------------------
+python3 -m pip install google-cloud-speech==2.7.0
+
+
+---------------------increase swapfile to 1GB---------------------------
+root@orangepilite:~# sudo swapon -s
+Filename				Type		Size		Used		Priority
+/dev/zram0                              partition	251456		65532		5
+root@orangepilite:~# sudo swapoff -a
+root@orangepilite:~# sudo swapon -s
+root@orangepilite:~# rm /swapfile
+root@orangepilite:~# sudo fallocate -l 1G /swapfile
+root@orangepilite:~# ls -ltr /swapfile
+-rw-r--r-- 1 root root 8589934592 Mar 30 22:04 /swapfile
+root@orangepilite:~# sudo chmod 600 /swapfile
+root@orangepilite:~# ls -ltr /swapfile
+-rw------- 1 root root 8589934592 Mar 30 22:04 /swapfile
+root@orangepilite:~# sudo mkswap /swapfile
+Setting up swapspace version 1, size = 1 GiB (8589930496 bytes)
+no label, UUID=4090c4d0-eca8-4df1-a98c-461805a680a0
+root@orangepilite:~# sudo swapon /swapfile
+root@orangepilite:~# sudo swapon -s
+Filename				Type		Size		Used		Priority
+/swapfile                               file		8388604		0		-2
+root@orangepilite:~#
+#add fstab for auto start after restart
+vi /etc/fstab
+/swapfile none swap sw 0 0
+#test, load fstab
+mount -a
+
+-------------------get camera size--------------
+$ lsusb
+Bus 001 Device 002: ID 5986:0241 Acer, Inc BisonCam, NB Pro
+...
+Then use the Bus and Device numbers to get more information on that device:
+
+$ lsusb -s 001:002 -v | egrep "Width|Height"
+    wWidth    640
+    wHeight   480
+    wWidth    1280
+    wHeight   1024
+
+----ai voice link---
+https://ttsmp3.com/ai
+
+-------------------common voice cache folder---------
+~/.cache/huggingface/datasets
+
+-------------------------------
+dataset = dataset['train'].train_test_split(test_size=0.01)['test']
+
+#for login type below 2 command to terminal
+#python3.11  -m pip install huggingface_hub
+#python3.11  -c "from huggingface_hub.hf_api import HfFolder; HfFolder.save_token('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')"
+
+#cache file for huggingface
+ls -ltr ~/.cache/huggingface/datasets
+
+---------------python 3.6 install-------------
+sudo apt install build-essential checkinstall
+sudo apt install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
+wget https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tar.xz
+tar xvf Python-3.6.0.tar.xz
+cd Python-3.6.0/
+./configure
+sudo make altinstall
+
+--------------------problems--------
+Could not fetch URL https://pypi.python.org/simple/deepspeech/: There was a problem confirming the ssl certificate:
+pip install --trusted-host pypi.python.org pytest-xdist
+pip install --trusted-host pypi.python.org --upgrade pip
+
+--------------------problem--------------------------
+(deepspeech) root@orangepilite:~/deepspeech# deepspeech --model models/deepspeech-0.9.3-models.tflite --scorer models/deepspeech-0.9.3-models.scorer --audio audio/2830-3980-0043.wav
+Loading model from file models/deepspeech-0.9.3-models.tflite
+TensorFlow: v2.3.0-6-g23ad988
+DeepSpeech: v0.9.3-0-gf2e9c85
+Segmentation fault
+#solution
+
+--------------------problems-------------------------
+Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg)
+apt-key list
+sudo cp /etc/apt/trusted.gpg /etc/apt/trusted.gpg.d
+sudo apt-key export 93D6889F9F0E78D5 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/slack.gpg
+
+--------------------problems-------------------------
+(deepspeech) tahmaz@HP:~/deepspeech$ pip3 install --upgrade pip
+Segmentation fault (core dumped)
+#solution install python3.6.15 with pyenv
+#temporary solution
+which pip
+vi pip-path and comment #sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+-------install last vertion with patch, if you want-----
+cd ~
+mkdir py36
+mkdir py36/tempfiles
+cd py36/tempfiles
+curl https://www.python.org/ftp/python/3.6.15/Python-3.6.15.tar.xz --output Python-3.6.15.tar.xz
+tar -xJvf Python-3.6.15.tar.xz
+cd Python-3.6.15
+vim alignment.patch  # Use your preferred text editor
+# Paste the contents of the patch, save and quit
+patch -p0 < alignment.patch
+cd ..
+Python-3.6.15/configure --prefix=/home/<username>/py36 --enable-optimizations --with-lto
+make
+make install
+cd ..
+rm -rf tempfiles
+
+---------------install pyenv-----------
+tahmaz@HP:~/pyenv$ git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+Cloning into '/home/tahmaz/.pyenv'...
+remote: Enumerating objects: 24069, done.
+remote: Counting objects: 100% (134/134), done.
+remote: Compressing objects: 100% (63/63), done.
+remote: Total 24069 (delta 60), reused 114 (delta 50), pack-reused 23935
+Receiving objects: 100% (24069/24069), 4.94 MiB | 1.36 MiB/s, done.
+Resolving deltas: 100% (16218/16218), done.
+tahmaz@HP:~/pyenv$ ls -ltr
+total 0
+tahmaz@HP:~/pyenv$ 
+tahmaz@HP:~/pyenv$ cd ..
+tahmaz@HP:~$ rm -fr pyenv/
+tahmaz@HP:~$ 
+tahmaz@HP:~$ 
+tahmaz@HP:~$ vi ~/.bashrc
+#add lines
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+tahmaz@HP:~$ 
+tahmaz@HP:~$ source ~/.bashrc
+tahmaz@HP:~$ 
+tahmaz@HP:~$ pyenv --version
+pyenv 2.4.1
+
+----------------------install deepspeech tp orange pi---------
+root@orangepilite:~/deepspeech# pyenv install 3.7
+Downloading Python-3.7.17.tar.xz...
+-> https://www.python.org/ftp/python/3.7.17/Python-3.7.17.tar.xz
+Installing Python-3.7.17...
+patching file Doc/library/ctypes.rst
+patching file Lib/test/test_unicode.py
+patching file Modules/_ctypes/_ctypes.c
+patching file Modules/_ctypes/callproc.c
+patching file Modules/_ctypes/ctypes.h
+patching file setup.py
+patching file 'Misc/NEWS.d/next/Core and Builtins/2020-06-30-04-44-29.bpo-41100.PJwA6F.rst'
+patching file Modules/_decimal/libmpdec/mpdecimal.h
+patching file setup.py
+Installed Python-3.7.17 to /root/.pyenv/versions/3.7.17
+root@orangepilite:~/deepspeech# 
+root@orangepilite:~/deepspeech# 
+root@orangepilite:~/deepspeech# /root/.pyenv/versions/3.7.17/bin/python -m venv .
+root@orangepilite:~/deepspeech# source bin/activate
+(deepspeech) root@orangepilite:~/deepspeech# pip install deepspeech
+
+
+------------check mtu size------------
+root@Worker3:~# ping -c 1 -M do -s 1472 10.0.0.5
+PING 10.0.0.5 (10.0.0.5) 1472(1500) bytes of data.
+From 192.168.1.1 icmp_seq=1 Frag needed and DF set (mtu = 1492)
+
+--- 10.0.0.5 ping statistics ---
+1 packets transmitted, 0 received, +1 errors, 100% packet loss, time 0ms
+
+root@Worker3:~# ping -c 1 -M do -s 1474 10.0.0.5
+PING 10.0.0.5 (10.0.0.5) 1474(1502) bytes of data.
+ping: local error: Message too long, mtu=1492
+
+-----------------voice remove noise-----------------------
+chunk.export(f"chunk_{i}.wav", format="wav")
+rate, data = wavfile.read(f"chunk_{i}.wav")
+
+#audio_buffer = io.BytesIO()
+#chunk.export(audio_buffer, format="wav")
+#audio_buffer.seek(0)
+#rate, data = wavfile.read(audio_buffer)
+
+reduced_noise = reduce_noise(y=data, sr=rate)
+wavfile.write(f"chunk_{i}_f.wav", rate, reduced_noise)
+
+
+
+
+-------------------espnet train---------
+apt install ffmpeg cmake sox flac
+cd /mnt/new/ai/datasets/common_voice
+cp cv-corpus-17.0-2024-03-15-tr.tar.gz tr.tar.gz
+python3.12 -m http.server 8000
+
+#prepare espnet
+cd /home/tahmaz/espnet
+python3.10 -m venv .venv
+source .venv/bin/activate
+pip install --no-index --find-links file:///opt/conda/envs/py_3.9/lib/python3.9/site-packages torch
+python -m pip install --no-index --find-links file:///var/lib/jenkins/pytorch/dist/torch-2.3.0a0%2Bgitae01701-cp39-cp39-linux_x86_64.whl#sha256=4b66a4f6e9f69ec79d5ebddc72a2b672e00201f9134f4e7f78a74aec6c63134c torch
+
+python -m pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm6.1/
+cd /opt/rocm/share/amd_smi && pip install .
+
+python -m  pip install torch==2.3.0+rocm6.0 torchaudio torchvision==0.18.0+rocm6.0 --index-url https://download.pytorch.org/whl/rocm6.0
+
+export LD_LIBRARY_PATH=/var/lib/jenkins/user/espnet/tools/venv/lib/python3.9/site-packages/torch/lib
+export LD_LIBRARY_PATH=/opt/rocm/lib
+
+python -m pip install espnet humanfriendly
+python -m pip install tensorboard matplotlib
+
+#change local/data.sh 
+    - change lang=tr
+    - change common voice foldername cv-corpus-17.0-2024-03-15-tr, find local/data_prep.pl "${COMMONVOICE}/cv-corpus-17.0-2024-03-15/${lang}" ...
+    - change url data_url=http://localhost:8000/${lang}.tar.gz
+
+#change run.sh 
+    - change lang=tr, 
+    - gpu number ngpu=1
+#check gpu
+python
+import torch
+>>> torch.cuda.is_available()
+True
+>>> torch.cuda.device_count()
+1
+>>> torch.cuda.current_device()
+0
+
+#now we need be sure parsed data
+vi local/data_prep.pl
+#change fields for normal parse
+#($spkr, $filepath, $text, $upvotes, $downvotes, $age, $gender, $accent) = split("\t", $_);
+($userid, $filepath, $sentence_id, $text, $spkr, $upvotes, $downvotes, $age, $gender, $accent) = split("\t", $_);
+or
+($spkr, $filepath, $sentence_id, $text, $sentence_domain, $upvotes, $downvotes, $age, $gender, $accent) = split("\t", $_);
+
+cd /home/tahmaz/espnet/egs2/commonvoice/asr1/
+./run.sh --stage 0 --stop-stage 3
+#will take some hour if data is big, wave format change and lm train
+
+cd /home/tahmaz/espnet/egs2/commonvoice/asr1/
+./run.sh --stage 4 --stop-stage 6
+
+#start train and monitor with nvtop
+cd /home/tahmaz/espnet/egs2/commonvoice/asr1/
+./run.sh --stage 7 --stop-stage 8
+
+#change batch size
+vi conf/train_lm.yaml #change batch size
+vi conf/train_asr.yaml #change batch size
+vi conf/tuning/train_asr_conformer5.yaml #change batch_bins: 100000
+
+#verify batch size
+python -m espnet2.bin.asr_train --optim adam --print_config
+
+#continue
+cd /home/tahmaz/espnet/egs2/commonvoice/asr1/
+./run.sh --stage 9 --stop-stage 12
+
+#monitor nvtop and below logs
+exp/asr_train_asr_conformer5_raw_az_bpe150_sp/train.log
+
+#install sctk, sclite, go to tools then install
+cd /home/tahmaz/espnet/tools/
+./installers//install_sctk.sh
+
+#continue
+cd /home/tahmaz/espnet/egs2/commonvoice/asr1/
+./run.sh --stage 13 --stop-stage 20
+
+---
+Stage 1: Data preparation for data/train_az, data/dev_az, etc.
+Stage 2: Speed perturbation: data/train_az -> data/train_az_sp
+Stage 3: Format wav.scp: data/ -> dump/raw
+Stage 4: Remove long/short data: dump/raw/org -> dump/raw
+Stage 5: Generate token_list from data/train_az/text using BPE
+Stage 6: LM collect stats: train_set=dump/raw/lm_train.txt, dev_set=dump/raw/org/dev_az/text
+Stage 7: LM Training: train_set=dump/raw/lm_train.txt, dev_set=dump/raw/org/dev_az/text
+Stage 8: Calc perplexity: dump/raw/test_az/text
+Stage 10: ASR collect stats: train_set=dump/raw/train_az_sp, valid_set=dump/raw/dev_az
+Stage 11: ASR Training: train_set=dump/raw/train_az_sp, valid_set=dump/raw/dev_az
+Stage 12: Decoding: training_dir=exp/asr_train_asr_conformer5_raw_az_bpe150_sp
+Stage 13: Scoring
+
+Stage 1: Data Preparation
+Input: Raw audio files and transcripts.
+Output: Organized directories with prepared data (e.g., data/train_az, data/dev_az).
+Stage 2: Speed Perturbation
+Input: Data from data/train_az.
+Output: Data with speed variations (data/train_az_sp).
+Stage 3: Format wav.scp
+Input: Data directories (data/).
+Output: Formatted wav.scp files in dump/raw.
+Stage 4: Remove Long/Short Data
+Input: Raw data with lengths (dump/raw/org).
+Output: Filtered data without extreme lengths (dump/raw).
+Stage 5: Generate token_list from text using BPE
+Input: Text files (data/train_az/text).
+Output: token_list using BPE.
+Stage 6: LM Collect Stats
+Input: Training and development text data.
+Output: Statistics for language modeling.
+train_set: dump/raw/lm_train.txt
+dev_set: dump/raw/org/dev_az/text
+Stage 7: LM Training
+Input: Collected stats files.
+Output: Trained language model.
+train_set: dump/raw/lm_train.txt
+dev_set: dump/raw/org/dev_az/text
+Stage 8: Calculate Perplexity
+Input: Test text data (dump/raw/test_az/text).
+Output: Perplexity scores.
+Stage 10: ASR Collect Stats
+Input: Speed-perturbed training data and validation data.
+Output: Collected stats for ASR.
+train_set: dump/raw/train_az_sp
+valid_set: dump/raw/dev_az
+Stage 11: ASR Training
+Input: ASR collected stats.
+Output: Trained ASR model.
+train_set: dump/raw/train_az_sp
+valid_set: dump/raw/dev_az
+Stage 12: Decoding
+Input: Trained ASR model directory.
+Output: Decoded outputs.
+training_dir: exp/asr_train_asr_conformer5_raw_az_bpe150_sp
+Stage 13: Scoring
+Input: Decoded outputs.
+Output: Final scores and metrics.
+
+----------get gpu info, amd, nvidia------
+lspci | grep VGA
+
+--------------iptables ssh, icmp open----------
+# Flush the FW Rules 
+iptables -F
+iptables  -X
+
+# Block all traffic
+iptables  -P INPUT DROP
+iptables  -P FORWARD DROP
+iptables  -P OUTPUT DROP
+
+
+# Allow SSH
+iptables  -A OUTPUT -p tcp --dport 22 -j ACCEPT 
+iptables  -A INPUT -p tcp --dport 22 -j ACCEPT
+
+
+# Allow ICMP (ping)
+iptables  -A INPUT -p icmp -j ACCEPT
+iptables  -A OUTPUT -p icmp -j ACCEPT
+
+
+---------------hiveos wifi config-----------
+wifi
+cat /etc/wpa_supplicant/wpa_supplicant.conf
+
+#startup
+vi /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet dhcp
+wpa-ssid SEON
+wpa-psk hashed-value-of-passphrase
+
+------------------pytorch docker-------------
+docker pull rocm/pytorch:latest
+docker run -d -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G -v /home/user:/var/lib/jenkins/user rocm/pytorch:latest
+
+docker exec -it my_container /bin/bash
+
+#-v /tmp:/container/directory
+
+
+--------------image to qcow2------------
+echo "Downloading HiveOS..."
+curl -o hiveos.img.xz "https://download.hiveos.farm/hiveos.xxxxxx.img.xz"
+echo "Decompressing..."
+xz --decompress hiveos.img.xz
+echo "Converting to qcow2 and recompressing..."
+qemu-img convert -c -O qcow2 hiveos.img hiveos.qcow2
+rm hiveos.img
+
+--------------image mount and put file to image----------
+echo "Updating config with supplied rig.conf..."
+modprobe nbd
+qemu-nbd -d /dev/nbd0
+qemu-nbd -c /dev/nbd0 hiveos.qcow2
+fdisk -l /dev/nbd0
+
+mkdir /mnt/hiveos-config
+mount -t ntfs-3g /dev/nbd0p1 /mnt/hiveos-config
+cp /hiveos-rig/rig.conf /mnt/hiveos-config/rig.conf
+
+umount /mnt/hiveos-config
+rm -r /mnt/hiveos-config
+qemu-nbd -d /dev/nbd0
+rmmod nbd
+echo "Image ready."
+
+------------tar untar folder-------------
+tar -czvf folder_name.tar.gz folder_name/
+tar -xzvf folder_name.tar.gz
+
+------------------docker save-load-------------
+#host1
+systemctl stop docker
+systemctl start docker
+docker commit -p 1d09068ef111 ubuntu001_bkp3
+#create backup
+docker save -o ubuntu001_bkp3.tar ubuntu001_bkp3
+
+#upload ubuntu001_bkp3.tar to my online drive
+aws s3 cp ubuntu001_bkp3.tar s3://mybucket001/
+
+
+#host2
+systemctl stop docker
+systemctl start docker
+cd /dir1
+
+#download ubuntu001_bkp3.tar from my online drive
+aws s3 cp s3://mybucket001/ubuntu001_bkp3.tar /dir1
+
+#restore backup
+cat ./ubuntu001_bkp3.tar  | docker load
+docker run --name ubuntu001 -it ubuntu001_bkp3:latest bash
+docker ps -a
+docker attach ubuntu001
+
+
+
+
+---------------------History---------------------------
+oot@orangepilite:~/seon-robot# history
+    8  echo "8.490.111.424.424" > /mnt/ramdisk/action/motor/command.txt
+    9  echo "8.490.001.424.424" > /mnt/ramdisk/action/motor/command.txt
+   10  poweroff
+   11  apt update
+   12  apt ypgrade
+   13  apt upgrade
+   14  cd seon-robot/
+   15  ls -ltr
+   16  cat startup.sh
+   17  cd /root/seon-robot/orangepi_PC_gpio_pyH3/examples/
+   18  vi sensor_test2.py
+   19  screen -r oled
+   20  screen -ls
+   21  cat ~/seon-robot/startup.sh
+   22   /usr/bin/python3 /root/seon-robot/orangepi_PC_gpio_pyH3/examples/sensor_test2.py
+   23  screen -ls
+   24  screen -r sendor
+   25  reboot
+   26  cd /root/seon-robot/orangepi_PC_gpio_pyH3/examples/
+   27  vi sensor_test2.py
+   28  poweroff
+   29  /usr/bin/python3 /root/seon-robot/cam/detect_face_and_turn2.py
+   30  v4l2-ctl --list-devices
+   31  dmesg | grep video
+   32  /usr/bin/python3 /root/seon-robot/cam/detect_face_and_turn2.py
+   33  ls -ltr /dev/
+   34  /usr/bin/python3 /root/seon-robot/cam/detect_face_and_turn2.py
+   35  cd seon-robot/
+   36  ls -ltr
+   37  df -h
+   38  ls -ltr /mnt/ramdisk
+   39  screen -ls
+   40  screen -S cam
+   41  tail -f /mnt/ramdisk/action/oled/command.txt
+   42  screen -r cam
+   43  reboot
+   44  screen -ls
+   45  screen  -r cam
+   46  poweroff
+   47  screen -ls
+   48  screen -r cam
+   49  screen -ls
+   50  screen -S cam
+   51  free -m
+   52  free -m
+   53  free -m
+   54  poweroff
+   55  /usr/bin/python3 /root/seon-robot/cam/detect_face_and_turn2.py
+   56  poweroff
+   57  cd ..
+   58  /usr/bin/python3 /root/seon-robot/cam/detect_face_and_turn_save.py
+   59  cd seon-robot/cam/
+   60  ls -ltr
+   61  mkdir images
+   62  cd images/
+   63  mkdir detected
+   64  ls -ltr
+   65  screen -ls
+   66  screen -r cam
+   67  screen -S cam
+   68  cd ../..
+   69  vi startup.sh
+   70  poweroff
+   71  poweroff
+   72  screen -ls
+   73  poweroff
+   74  armbian-config
+   75  ping google.com
+   76  ifconfig
+   77  shutdown
+   78  shutdown -c
+   79  poweroff
+   80  screen -r
+   81  screen -ls
+   82  screen -r oled
+   83  pwd
+   84  df -h
+   85  ls -ltr /mnt ramdisk
+   86  ls -ltr /mnt/ramdisk
+   87  ls -ltr /mnt/ramdisk/action/
+   88  ls -ltr /mnt/ramdisk/action/oled
+   89  ls -ltr /mnt/ramdisk/action/motor/
+   90  cat /mnt/ramdisk/action/command.txt
+   91  cat /mnt/ramdisk/action/oled/command.txt
+   92  cat /mnt/ramdisk/action/motor/command.txt
+   93  tail -f /mnt/ramdisk/action/motor/command.txt
+   94  screen -ls
+   95  screen -r cam
+   96  pwd
+   97  ls -ltr /root/
+   98  ls -ltr /root/seon-robot/
+   99  cat /root/seon-robot/startup.sh
+  100  poweroff
+  101  screen -ls
+  102  screen -r cam
+  103  screen -ls
+  104  ls -ltr
+  105  cd seon-robot/
+  106  ls -ltr
+  107  cd cam
+  108  ls -ltr
+  109  cd images/
+  110  ls -ltr
+  111  ls -ltr detected/
+  112  pwd
+  113  ls -ltr detected/
+  114  poweroff
+  115  screen -ls
+  116  top
+  117  screen -r cam
+  118  pwd
+  119  cd seon-robot/
+  120  ls -ltr
+  121  cat startup.sh
+  122  cd /root/seon-robot/cam/
+  123  ls -ltr
+  124  python3 object_track.py
+  125  python3 object_track3.py
+  126  python3 object_track2.py
+  127  cat object_track2.py
+  128  cat object_track3.py
+  129  vi object_track2.py
+  130  cat object_track2.py
+  131  python3 object_track2.py
+  132  cat object_track3.py
+  133  cat object_track3.py
+  134  python3 object_track3.py
+  135  ls -ltr
+  136  ls -ltr images
+  137  ls -ltr images/detected/
+  138  git clone https://github.com/stefanhaustein/TerminalImageViewer.git
+  139  pwd
+  140  ls -ltr
+  141  mv -fr TerminalImageViewer/ ~/
+  142  mv -f TerminalImageViewer/ ~/
+  143  ls -ltr
+  144  pwd
+  145  cd ~/
+  146  ls -ltr
+  147  cd TerminalImageViewer/
+  148  ls -ltr
+  149  cd src/
+  150  ls -ltr
+  151  cd java/
+  152  ls -ltr
+  153  cat TerminalImageViewer.java
+  154  pwd
+  155  ls -ltr
+  156  cd ..
+  157  ls -ltr
+  158  make
+  159  brawe
+  160  brew
+  161  apt install brew
+  162  sudo make install
+  163  cd ../..
+  164  ls -ltr
+  165  ls -ltr
+  166  pwd
+  167  cd seon-robot/cam/images/detected/
+  168  ls -ltr
+  169  tiv 20231227-134310_0.jpg
+  170  rm -fr /root/TerminalImageViewer/
+  171  tiv 20231227-134310_0.jpg
+  172  git clone https://github.com/stolk/imcat.git
+  173  ls -ltr
+  174  cd imcat/
+  175  sudo make install
+  176  cd ..
+  177  imcat 20231227-134310_0.jpg
+  178  cd ../..
+  179  ls -ltr
+  180  cd images/detected/
+  181  ls -ltr
+  182  rm -fr imcat/
+  183  imcat 20231227-134310_0.jpg
+  184  rm 20231227-134310_0.jpg
+  185  cd ..
+  186  cd ..
+  187  ls -ltr
+  188  imcat photo.jpg
+  189  ls -ltr
+  190  imcat photo2.jpg
+  191  ls -ltr
+  192  imcat frame.jpg
+  193  ls -ltr
+  194  cd ..
+  195  ls -ltr
+  196  poweroff
+  197  cd /root/seon-robot/cam
+  198  ls -ltr
+  199  history
+  200  imcat photo.jpg
+  201  ls -ltr images/
+  202  ls -ltr images/detected/
+  203  imcat images/detected/20240123-080941_0.jpg
+  204  imcat images/detected/20240123-080942
+  205  imcat images/detected/20240123-080942_0.jpg
+  206  imcat images/detected/20240123-080944_0.jpg
+  207  ls -ltr images/detected/
+  208  ls -ltr images/detected/
+  209  ls -ltr images/detected/20240123-081458_0.jpg
+  210  imcat images/detected/20240123-081458_0.jpg
+  211  screen -ls
+  212  cd ..
+  213  ls -ltr
+  214  cd commands/
+  215  ls -ltr
+  216  cat track_ball_stop.sh
+  217  cat track_ball_start.sh
+  218  cd ..
+  219  ls -ltr
+  220  df -h
+  221  ls -ltr /mnt/ramdisk
+  222  ls -ltr /mnt/ramdisk/action/
+  223  ls -ltr /mnt/ramdisk/action/command.txt
+  224  cat /mnt/ramdisk/action/command.txt
+  225  cat /mnt/ramdisk/action/motor/command.txt
+  226  cat /mnt/ramdisk/action/oled/command.txt
+  227  poweroff
+  228  screen -ls
+  229  screen -r cam
+  230  screen -ls
+  231  pwd
+  232  ls -ltr
+  233  cd seon-robot/
+  234  ls -ltr
+  235  cd cam/
+  236  ls -ltr
+  237  python3 object_track3.py
+  238  cp object_track3.py object_track_up_down.py
+  239  vi object_track_up_down.py
+  240  python3 object_track_up_down.py
+  241  vi object_track_up_down.py
+  242  python3 object_track_up_down.py
+  243  vi object_track_up_down.py
+  244  ls -ltr
+  245  cat detect_face_turn_recognize_save.py
+  246  vi object_track_up_down.py
+  247  python3 object_track_up_down.py
+  248  cat detect_face_turn_recognize_save.py
+  249  screen -ls
+  250  ls -ltr ..
+  251  ls -ltr ../startup.sh
+  252  cat ../startup.sh
+  253  /usr/bin/screen -d -m -S oled /usr/bin/python2 /root/seon-robot/OrangePi-OLED/examples/test4.py
+  254  screen -ls
+  255  python3 object_track_up_down.py
+  256  screen -ls
+  257  cat ../startup.sh
+  258  cat /root/seon-robot/OrangePi-OLED/examples/motor_command.py
+  259  cat ../startup.sh
+  260  cat /root/seon-robot/OrangePi-OLED/examples/test4.py
+  261  python3 object_track_up_down.py
+  262  vi object_track_up_down.py
+  263  python3 object_track_up_down.py
+  264  /usr/bin/screen -d -m -S oled /usr/bin/python2 /root/seon-robot/OrangePi-OLED/examples/test4.py
+  265  python3 object_track_up_down.py
+  266  vi ../startup.sh
+  267  poweroff
+  268  sudo apt install git python3-pip python3-scipy python3-numpy python3-pyaudio libatlas3-base
+  269  pwd
+  270  ls -ltr
+  271  pip3 install deepspeech --upgrade
+  272  top
+  273  python3 -m pip install --upgrade pip
+  274  pip3 install deepspeech --upgrade
+  275  pip3 install halo webrtcvad --upgrade
+  276  pwd
+  277  ls -ltr
+  278  mkdir deepspeech
+  279  cd deepspeech/
+  280  sudo pip3 install virtualenv
+  281  virtualenv -p python3 ./tmp/deepspeech-venv/
+  282  source ./tmp/deepspeech-venv/bin/activate
+  283  pip3 install deepspeech
+  284  curl -LO https//github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer
+  285  screen -ls
+  286  screen -r cam
+  287  pwd
+  288  ls -ltr
+  289  ls -ltr tmp
+  290  ls -ltr tmp/deepspeech-venv/
+  291  ls -ltr tmp/deepspeech-venv/lib/
+  292  curl -LO https//github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.tflite
+  293  curl -LO https//github.com/mozilla/DeepSpeech/releases/download/v0.9.3/audio-0.9.3.tar.gz
+  294  curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer
+  295  ls -ltr
+  296  curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.tflite
+  297  git clone https://github.com/mozilla/DeepSpeech.git
+  298  ls -ltr
+  299  cd DeepSpeech/
+  300  ls -ltr
+  301  chmod 755 setup.py
+  302  ./setup.py
+  303  python3 setup.py
+  304  docker ps
+  305  python3 mic_vad_streaming.py -m deepspeech-0.9.3-models.tflite -s deepspeech-0.9.3-models.scorer -v 3
+  306  pip install deepspeech
+  307  pip install --upgrade pip
+  308  pip install deepspeech
+  309  pip3 install deepspeech
+  310  apt update
+  311  df -h
+  312  apt upgrade
+  313  apt update
+  314  df -h
+  315  ls -ltr
+  316  pip3 install deepspeech
+  317  ls -ltr images/
+  318  sudo apt install libatlas3-base
+  319  pip3 install -r requirements.txt
+  320  pwd
+  321  ls -ltr
+  322  poweroff
+  323  screen -r cam
+  324  ls -ltr /mnt/ramdisk
+  325  ls -ltr /mnt/ramdisk/action/
+  326  ls -ltr /mnt/ramdisk/action/oled/
+  327  ls -ltr /mnt/ramdisk/action/oled/command.txt
+  328  echo "wink_right" > /mnt/ramdisk/action/oled/command.txt
+  329  echo "wink_left" > /mnt/ramdisk/action/oled/command.txt
+  330  echo "wink_right" > /mnt/ramdisk/action/oled/command.txt
+  331  echo "wink_left" > /mnt/ramdisk/action/oled/command.txt
+  332  screen -ls
+  333  cd seon-robot/
+  334  ls -ltr
+  335  cat startup.sh
+  336  cp /root/seon-robot/OrangePi-OLED/examples/test4.py /root/seon-robot/OrangePi-OLED/examples/test5.py
+  337  vi /root/seon-robot/OrangePi-OLED/examples/test5.py
+  338  screen -r oled
+  339  screen -ls
+  340  python3 /root/seon-robot/OrangePi-OLED/examples/test5.py
+  341  python /root/seon-robot/OrangePi-OLED/examples/test5.py
+  342  python2 /root/seon-robot/OrangePi-OLED/examples/test5.py
+  343  vi /root/seon-robot/OrangePi-OLED/examples/test5.py
+  344  python2 /root/seon-robot/OrangePi-OLED/examples/test5.py
+  345  vi /root/seon-robot/OrangePi-OLED/examples/test5.py
+  346  python2 /root/seon-robot/OrangePi-OLED/examples/test5.py
+  347  vi startup.sh
+  348  cat startup.sh
+  349  /usr/bin/screen -d -m -S oled /usr/bin/python2 /root/seon-robot/OrangePi-OLED/examples/test5.py
+  350  scrren -ls
+  351  screen -ls
+  352  cd speech/
+  353  ls -ltr
+  354  vi record_chunk_save.py
+  355  python3 record_chunk_save.py
+  356  vi record_chunk_save.py
+  357  python3 record_chunk_save.py
+  358  python3 record_chunk_save.py
+  359  poweroff
+  360  arecord -l
+  361  pwd
+  362  aplay -l
+  363  aplay /tmp/test-mic.wav
+  364  pwd
+  365  ls -ltr
+  366  cd seon-robot/
+  367  ls -ltr
+  368  cd audio/
+  369  ls -ltr
+  370  aplay robot-6282.mp3
+  371  ./play.sh
+  372  ps -ef | grep python
+  373  kill -9 2626
+  374  cd seon-robot/audio/
+  375  ls -ltr
+  376  cat play.sh
+  377  vi /etc/asound.conf
+  378  ./play.sh
+  379  armbian-config
+  380  cat play.sh
+  381  ls -ltr
+  382  aplay Onur_Sevinc_hello.wav
+  383  aplay --device="hw:3,0" Onur_Sevinc_hello.wav
+  384  aplay --device="hw:3,0" Onur_Sevinc_hello.wav
+  385  aplay -h
+  386  aplay -l
+  387  aplay --device="Y11" Onur_Sevinc_hello.wav
+  388  aplay --device="hw:3,0" Onur_Sevinc_hello.wav
+  389  aplay --device="hw:3,0" --samples=44000 Onur_Sevinc_hello.wav
+  390  aplay --device="hw:3,0" --samples=16000 Onur_Sevinc_hello.wav
+  391  pip3 install sounddevice
+  392  python3
+  393  vi /etc/asound.conf
+  394  ./play.sh
+  395  lspci -knn|grep -iA2 audio
+  396  speaker-test -c2
+  397  vi /etc/asound.conf
+  398  alsamixer
+  399  alsamixer
+  400  alsamixer -h
+  401  alsamixer -c 2
+  402  alsamixer -c 3
+  403  ./play.sh
+  404  ls -ltr
+  405  aplay robot-6282.mp3
+  406  aplay Onur_Sevinc_hello.wav
+  407  arecord -f S16_LE -d 10 -r 16000 /tmp/test-mic.wav
+  408  ls -ltr
+  409  aplay /tmp/test-mic.wav
+  410  alsamixer -c 3
+  411  aplay /tmp/test-mic.wav
+  412  arecord -f S16_LE -d 10 -r 16000 /tmp/test-mic.wav
+  413  aplay /tmp/test-mic.wav
+  414  ls -ltr
+  415  cd ..
+  416  ls -ltr
+  417  vi assistant.py
+  418  python3 assistant.py
+  419  vi assistant.py
+  420  vi assistant.py
+  421  python3 assistant.py
+  422  alsamixer -c 3
+  423  python3 assistant.py
+  424  vi assistant.py
+  425  python3 assistant.py
+  426  vi assistant.py
+  427  python3 assistant.py
+  428  alsamixer -c 3
+  429  alsamixer -c 3
+  430  python3 assistant.py
+  431  vi assistant.py
+  432  python3 assistant.py
+  433  vi assistant.py
+  434  python3 assistant.py
+  435  python3 assistant.py
+  436  vi assistant.py
+  437  python3 assistant.py
+  438  vi assistant.py
+  439  python3 assistant.py
+  440  screen -ls
+  441  cat startup.sh
+  442  top
+  443  cat startup.sh
+  444  cat /root/seon-robot/orangepi_PC_gpio_pyH3/examples/sensor_test2.py
+  445  vi assistant.py
+  446  python3 assistant.py
+  447  vi assistant.py
+  448  python3 assistant.py
+  449  cat assistant.py
+  450  poweroff
+  451  ps -ef | grep python
+  452  kill -9 1701
+  453  cd seon-robot/
+  454  cd speech/
+  455  cd ,,
+  456  cd ..
+  457  ls -ltr
+  458  cd audio/
+  459  ls -ltr
+  460  cd ..
+  461  ls -ltr
+  462  mv assistant.py speech/
+  463  cd speech/
+  464  ls -ltr
+  465  vi assistant_gemini.py
+  466  python3 assistant_gemini.py
+  467  pip3 install google-generativeai
+  468  python3 assistant_gemini.py
+  469  vi assistant_gemini.py
+  470  python3 assistant_gemini.py
+  471  python3 assistant_gemini.py
+  472  poweroff
+  473  cd seon-robot/speech/
+  474  python3 assistant_gemini.py
+  475  python3 assistant_gemini.py
+  476  python3 assistant_gemini.py
+  477  python3 assistant_gemini.py
+  478  python3 assistant_gemini.py
+  479  poweroff
+  480  poweroff
+  481  ls -ltr
+  482  cd seon-robot/
+  483  ls -ltr
+  484  cd ir
+  485  ls -ltr
+  486  cat irtest2.py
+  487  cat ../startup.sh
+  488  cat /root/seon-robot/ir/ir.py
+  489  screen -ls
+  490  cd ..
+  491  cat startup.sh
+  492  screen -r sensor
+  493  /usr/bin/screen -d -m -S oled /usr/bin/python2 /root/seon-robot/OrangePi-OLED/examples/test5.py
+  494  screen -ls
+  495  reboot
+  496  cd seon-robot/
+  497  ls -ltr
+  498  cat startup.sh
+  499  /usr/bin/screen -d -m -S oled /usr/bin/python2 /root/seon-robot/OrangePi-OLED/examples/test5.py
+  500  reboot
+  501  cd seon-robot/
+  502  ls -ltr
+  503  screen -ls
+  504  cat startup.sh
+  505  cat /root/seon-robot/OrangePi-OLED/examples/test5.py
+  506  hostory
+  507  history
